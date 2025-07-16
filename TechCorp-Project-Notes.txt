@@ -15,5 +15,3 @@ Key Learning Points:
 - Security group configuration
 - VM deployment process
 - SSH vs RDP connections
-
-Time Investment: 7 days, ~2 hours per day
