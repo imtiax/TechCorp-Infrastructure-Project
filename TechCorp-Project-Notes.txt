@@ -1,3 +1,313 @@
+Project 1: Company Infrastructure Setup - Ultra-Detailed Guide
+Before We Start: Setting Up Your Environment
+
+Step 1: Create/Access Your Azure Account
+Open your web browser (Chrome, Edge, or Firefox)
+Navigate to https://portal.azure.com
+Click "Sign in" button (top right)
+Enter your Microsoft account credentials
+If you don't have an account, click "Create one" and follow the registration process
+
+Step 2: Install Azure CLI (Optional but Recommended)
+For Windows:
+Go to https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows
+Click "Download the MSI installer"
+Run the downloaded file
+Follow the installation wizard (keep all default settings)
+Open Command Prompt and type az --version to verify installation
+
+For Web-based option:
+In Azure Portal, click the "Cloud Shell" icon (>_) in the top toolbar
+Select "Bash" when prompted
+Click "Create storage" if it's your first time
+
+Day 1: Setting Up Resource Groups
+Step 1: Create Your First Resource Group
+Via Azure Portal:
+
+Login to Azure Portal (https://portal.azure.com)
+Navigate to Resource Groups:
+Click "All services" in the left sidebar
+Type "Resource groups" in the search box
+Click "Resource groups" from the results
+
+Create New Resource Group:
+Click the "+ Create" button (top left)
+Subscription: Select your subscription from dropdown
+Resource group name: Type TechCorp-Prod-RG
+Region: Select "East US" from dropdown
+Click "Review + create" button (bottom left)
+Click "Create" button
+Wait for "Deployment completed" message (usually 5-10 seconds)
+
+Repeat for Development Resource Group:
+Click "← Resource groups" (back button)
+Click "+ Create" again
+Resource group name: Type TechCorp-Dev-RG
+Region: Select "East US"
+Click "Review + create" → "Create"
+
+Repeat for Network Resource Group:
+Click "← Resource groups" (back button)
+Click "+ Create" again
+Resource group name: Type TechCorp-Network-RG
+Region: Select "East US"
+Click "Review + create" → "Create"
+
+Verification:
+You should now see 3 resource groups in your list
+Each should show "East US" as the location
+Each should show "0 resources" currently
+
+Day 2: Planning Your Network
+Step 3: Understanding the Network Design
+
+Our Network Plan:
+Main Network: 10.0.0.0/16 (This gives us 65,536 IP addresses)
+Web Subnet: 10.0.1.0/24 (256 IP addresses for web servers)
+App Subnet: 10.0.2.0/24 (256 IP addresses for application servers)
+Database Subnet: 10.0.3.0/24 (256 IP addresses for databases)
+
+Step 4: Create Virtual Network
+Via Azure Portal:
+Navigate to Virtual Networks:
+In Azure Portal, click "All services" (left sidebar)
+Type "Virtual networks" in search box
+Click "Virtual networks" from results
+
+Create New Virtual Network:
+Click "+ Create" button (top left)
+Subscription: Select your subscription
+Resource group: Click dropdown → Select "TechCorp-Network-RG"
+Name: Type TechCorp-VNet
+Region: Select "East US"
+
+Configure IP Addresses:
+Click "Next: IP Addresses >" button (bottom)
+IPv4 address space: Should show 10.0.0.0/16 (if not, clear and type this)
+Subnet name: Change "default" to Web-Subnet
+Subnet address range: Type 10.0.1.0/24
+Click "Review + create" → "Create"
+
+
+Add Additional Subnets:
+After deployment completes, click "Go to resource"
+In the left menu, click "Subnets"
+Click "+ Subnet" button
+Name: Type App-Subnet
+Subnet address range: Type 10.0.2.0/24
+Click "Save"
+
+Add Database Subnet:
+Click "+ Subnet" button again
+Name: Type Database-Subnet
+Subnet address range: Type 10.0.3.0/24
+Click "Save"
+
+Verification:
+You should see 3 subnets in your Virtual Network
+Each subnet should show "Available IPs: 251" (256 minus 5 reserved by Azure)
+
+Day 3: Setting Up Security
+Step 5: Create Network Security Groups
+Create Web Security Group:
+Navigate to Network Security Groups:
+Azure Portal → "All services" → Type "Network security groups"
+Click "Network security groups" from results
+
+Create Web NSG:
+Click "+ Create"
+Subscription: Select your subscription
+Resource group: Select "TechCorp-Network-RG"
+Name: Type Web-NSG
+Region: Select "East US"
+Click "Review + create" → "Create"
+
+Configure Web NSG Rules:
+After deployment, click "Go to resource"
+In left menu, click "Inbound security rules"
+Click "+ Add" button
+Source: Keep "Any"
+Source port ranges: Keep "*"
+Destination: Keep "Any"
+Service: Select "HTTP" from dropdown
+Action: Keep "Allow"
+Priority: Type 100
+Name: Type Allow-HTTP
+Click "Add"
+
+Add HTTPS Rule:
+Click "+ Add" again
+Service: Select "HTTPS" from dropdown
+Priority: Type 110
+Name: Type Allow-HTTPS
+Click "Add"
+
+Add RDP Rule (for Windows VM):
+Click "+ Add" again
+Service: Select "RDP" from dropdown
+Priority: Type 120
+Name: Type Allow-RDP
+Click "Add"
+
+Create App Security Group:
+Go back to Network Security Groups main page
+Click "+ Create"
+Name: Type App-NSG
+Resource group: Select "TechCorp-Network-RG"
+Click "Review + create" → "Create"
+
+Create Database Security Group:
+Repeat the process
+Name: Type Database-NSG
+Resource group: Select "TechCorp-Network-RG"
+Click "Review + create" → "Create"
+
+Day 4: Associate Security Groups with Subnets
+Step 6: Link NSGs to Subnets
+Navigate to Virtual Networks:
+Azure Portal → "All services" → "Virtual networks"
+Click "TechCorp-VNet"
+
+Associate Web-NSG with Web-Subnet:
+Click "Subnets" in left menu
+Click "Web-Subnet"
+Network security group: Click dropdown → Select "Web-NSG"
+Click "Save"
+
+Associate App-NSG with App-Subnet:
+Click "App-Subnet"
+Network security group: Click dropdown → Select "App-NSG"
+Click "Save"
+
+Associate Database-NSG with Database-Subnet:
+Click "Database-Subnet"
+Network security group: Click dropdown → Select "Database-NSG"
+Click "Save"
+
+Verification:
+Each subnet should now show its associated NSG in the subnets list
+
+Day 5: Create Your First Virtual Machine (Windows Domain Controller)
+Step 7: Create Windows VM
+Navigate to Virtual Machines:
+Azure Portal → "All services" → Type "Virtual machines"
+Click "Virtual machines" from results
+
+Create VM:
+
+Click "+ Create" → Select "Azure virtual machine"
+Subscription: Select your subscription
+Resource group: Select "TechCorp-Prod-RG"
+Virtual machine name: Type DC01
+Region: Select "East US"
+Availability options: Keep "No infrastructure redundancy required"
+Security type: Keep "Standard"
+Image: Click "See all images"
+Type "Windows Server 2019" in search box
+Click "Windows Server 2019 Datacenter - Gen2"
+Click "Select"
+Size: Click "Change size"
+Type "B2s" in search box
+Click "Standard_B2s - 2 vcpus, 4 GiB memory"
+Click "Select"
+Configure Administrator Account:
+Username: Type azureuser
+Password: Type TechCorp123!@#
+Confirm password: Type TechCorp123!@#
+Check "I confirm I have an eligible Windows license"
+
+Configure Networking:
+Click "Next: Disks >" → Click "Next: Networking >"
+Virtual network: Should show "TechCorp-VNet"
+Subnet: Select "Web-Subnet"
+Public IP: Keep "Create new"
+NIC network security group: Select "Advanced"
+Configure network security group: Select "Web-NSG"
+Review and Create:
+Click "Review + create"
+Wait for validation to pass
+Click "Create"
+Download private key: Click "Download private key and create resource"
+Save the key file to your computer
+Wait for Deployment: This usually takes 5-10 minutes.
+
+Day 6: Create Linux Web Server
+Step 8: Create Linux VM
+
+Create Second VM:
+
+Go to Virtual Machines → Click "+ Create" → "Azure virtual machine"
+Resource group: Select "TechCorp-Prod-RG"
+Virtual machine name: Type WebServer01
+Region: Select "East US"
+Image: Click "See all images"
+Type "Ubuntu" in search box
+Click "Ubuntu Server 20.04 LTS - Gen2"
+Click "Select"
+Size: Click "Change size"
+Type "B1s" in search box
+Click "Standard_B1s - 1 vcpu, 1 GiB memory"
+Click "Select"
+
+Configure Authentication:
+Authentication type: Select "SSH public key"
+Username: Type azureuser
+SSH public key source: Keep "Generate new key pair"
+Key pair name: Type WebServer01_key
+
+Configure Networking:
+Click "Next: Disks >" → Click "Next: Networking >"
+Virtual network: Should show "TechCorp-VNet"
+Subnet: Select "App-Subnet"
+Public IP: Keep "Create new"
+NIC network security group: Select "Advanced"
+Configure network security group: Select "App-NSG"
+
+Add SSH Rule to App-NSG:
+Click "Create new" next to network security group
+Click "+ Add an inbound rule"
+Service: Select "SSH"
+Priority: Type 100
+Name: Type Allow-SSH
+Click "Add"
+Click "OK"
+
+Create VM:
+Click "Review + create" → "Create"
+Download private key: Click "Download private key and create resource"
+Save the SSH key file
+
+Day 7: Test and Document Everything
+Step 9: Test Your Windows VM
+
+Connect to Windows VM:
+Go to Virtual Machines → Click "DC01"
+Click "Connect" → Select "RDP"
+Click "Download RDP File"
+Open the downloaded file
+Username: Type azureuser
+Password: Type TechCorp123!@#
+Click "OK"
+
+Basic Configuration:
+Once connected, open Server Manager
+Click "Local Server" in left panel
+Note the computer name and IP address
+Take a screenshot for documentation
+
+Step 10: Test Your Linux VM
+Connect to Linux VM:
+Go to Virtual Machines → Click "WebServer01"
+Click "Connect" → Select "SSH"
+Copy the SSH command shown
+Open Command Prompt/Terminal
+Navigate to where you saved the SSH key
+Run the SSH command
+Type "yes" when prompted about authenticity
+Run "sudo apt update" to test connectivity
+
+
 Project Completion Summary:
 ==================================
 ✅ Created 3 Resource Groups
@@ -6,7 +316,6 @@ Project Completion Summary:
 ✅ Deployed Windows Server 2019 VM (DC01)
 ✅ Deployed Ubuntu Linux VM (WebServer01)
 ✅ Tested connectivity to both VMs
-✅ Created GitHub repository for documentation
 
 Key Learning Points:
 - Azure Portal navigation
