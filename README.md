@@ -83,3 +83,53 @@ Enhanced the basic infrastructure with enterprise-level security and monitoring 
   - Low-Memory-DC01 (<500MB available)
 - **Action Groups:** IT-Alerts (email notifications)
 - **Notification Email:** [your-email@domain.com]
+
+## Architecture Diagram
+Azure AD
+├── Users (john.smith, jane.doe)
+├── Groups (IT-Department, HR-Department, Azure-Administrators)
+└── Conditional Access Policies
+Key Vault
+├── DC01-AdminPassword
+└── WebServer01-SSHKey
+Monitoring
+├── Log Analytics Workspace
+├── Performance Dashboards
+└── Alert Rules
+Backup
+├── Recovery Services Vault
+└── Daily Backup Policies
+
+## Security Best Practices Implemented
+1. Multi-factor authentication for privileged accounts
+2. Centralized secret management with Key Vault
+3. Comprehensive monitoring and alerting
+4. Regular automated backups
+5. Role-based access control
+6. Conditional access policies
+
+## Next Steps
+1. Implement Azure Security Center recommendations
+2. Add more granular monitoring rules
+3. Configure automated remediation
+4. Set up disaster recovery testing
+5. Implement compliance reporting
+
+## Cost Optimization
+- Use free tiers where possible
+- Set up budget alerts
+- Review and optimize resources monthly
+- Consider reserved instances for long-term use
+
+## Time Investment
+- **Duration:** 4 days
+- **Daily Time:** 2-3 hours
+
+## Skills Developed
+- Azure Active Directory administration
+- Key Vault management
+- Azure Monitor configuration
+- Backup and recovery planning
+- Security alert configuration
+- Dashboard creation and management
+
