@@ -1,4 +1,4 @@
-# TechCorp Microsoft Azure Infrastructure Project - Handson Project for Newbies
+# TechCorp Azure Infrastructure Hands-On Project for Beginners
 
 ## Overview
 This project demonstrates the setup of a basic company infrastructure in Microsoft Azure.
