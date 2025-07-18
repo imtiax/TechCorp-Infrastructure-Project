@@ -305,6 +305,418 @@ Type "yes" when prompted about authenticity
 Run "sudo apt update" to test connectivity
 
 
+Part 2: Security & Monitoring Implementation - Ultra-Detailed Guide
+Overview
+Building on Part-1, we'll now add enterprise-level security and monitoring to your TechCorp infrastructure. 
+
+Azure Active Directory with users and groups
+Key Vault for secrets management
+Azure Monitor with custom dashboards
+Log Analytics workspace
+Backup policies for VMs
+Security monitoring and alerts
+
+
+Azure Active Directory Setup
+Step 1: Access Azure Active Directory
+
+Navigate to Azure AD:
+Open Azure Portal (https://portal.azure.com)
+In the left sidebar, click "Azure Active Directory"
+If you don't see it, click "All services" → type "Azure Active Directory"
+
+
+Explore Your Current AD:
+Click "Overview" in the left menu
+Note your Directory name (usually like "Default Directory")
+Note your Tenant ID (long string of letters/numbers)
+
+Step 2: Create Organizational Units (Groups)
+Create IT Department Group:
+Click "Groups" in the left menu
+Click "+ New group"
+Group type: Select "Security"
+Group name: Type IT-Department
+Group description: Type IT Department Staff
+Membership type: Select "Assigned"
+Click "Create"
+
+Create HR Department Group:
+Click "+ New group" again
+Group type: Select "Security"
+Group name: Type HR-Department
+Group description: Type HR Department Staff
+Membership type: Select "Assigned"
+Click "Create"
+
+Create Administrators Group:
+Click "+ New group" again
+Group type: Select "Security"
+Group name: Type Azure-Administrators
+Group description: Type Azure Infrastructure Administrators
+Membership type: Select "Assigned"
+Click "Create"
+
+Step 3: Create Test Users
+Create IT User:
+Click "Users" in the left menu
+Click "+ New user" → "Create new user"
+User name: Type john.smith
+Name: Type John Smith
+First name: Type John
+Last name: Type Smith
+Password: Click "Auto-generate password"
+Show password: Check the box and copy the password to your notes
+Job title: Type IT Administrator
+Department: Type IT
+Click "Create"
+
+
+Create HR User:
+Click "+ New user" → "Create new user"
+User name: Type jane.doe
+Name: Type Jane Doe
+First name: Type Jane
+Last name: Type Doe
+Password: Click "Auto-generate password"
+Show password: Check the box and copy the password to your notes
+Job title: Type HR Manager
+Department: Type HR
+Click "Create"
+
+Step 4: Assign Users to Groups
+Add John to IT Department:
+Click "Groups" in the left menu
+Click "IT-Department"
+Click "Members" in the left submenu
+Click "+ Add members"
+Search for "john.smith"
+Click on "John Smith" to select him
+Click "Select"
+Add John to Administrators:
+Go back to Groups → Click "Azure-Administrators"
+Click "Members" → "+ Add members"
+Search and select "john.smith"
+Click "Select"
+Add Jane to HR Department:
+Go back to Groups → Click "HR-Department"
+Click "Members" → "+ Add members"
+Search and select "jane.doe"
+Click "Select"
+
+Multi-Factor Authentication Setup
+Step 6: Enable MFA for Administrators
+
+Navigate to MFA Settings:
+Azure Portal → "Azure Active Directory"
+Click "Security" in the left menu
+Click "MFA" under "Manage"
+Click "Getting started"
+Configure MFA Settings:
+Click "Additional cloud-based MFA settings"
+This opens a new tab with MFA configuration
+Under "Users," click "john.smith"
+Click "Enable" on the right
+Click "Enable multi-factor auth" in the popup
+Click "Close"
+
+Step 7: Test MFA Login
+Test with John's Account:
+Open a new incognito/private browser window
+Go to https://portal.azure.com
+Click "Sign in"
+Username: Type john.smith@yourdomain.onmicrosoft.com
+Password: Use the password you copied earlier
+Follow the MFA setup process:
+Download Microsoft Authenticator app on your phone
+Scan the QR code shown
+Enter the verification code
+Complete the setup
+Document MFA Setup:
+
+Step 8: Create Conditional Access Policy
+Navigate to Conditional Access:
+Azure Portal → "Azure Active Directory" → "Security"
+Click "Conditional access" in the left menu
+Click "+ New policy"
+Create Admin Protection Policy:
+Name: Type Require MFA for Administrators
+Users and groups: Click "0 users and groups selected"
+Click "Select users and groups"
+Check "Groups"
+Select "Azure-Administrators"
+Click "Select"
+Cloud apps: Click "No cloud apps or actions selected"
+Click "Select apps"
+Click "All cloud apps"
+Click "Select"
+Access controls: Click "0 controls selected"
+Check "Require multi-factor authentication"
+Click "Select"
+Enable policy: Select "On"
+Click "Create"
+
+Day 3: Azure Key Vault Setup
+Step 9: Create Key Vault
+
+Navigate to Key Vaults:
+Azure Portal → "All services" → Type "Key vaults"
+Click "Key vaults" from results
+Click "+ Create"
+
+Configure Key Vault:
+Subscription: Select your subscription
+Resource group: Select "TechCorp-Prod-RG"
+Key vault name: Type techcorp-keyvault-001 (must be globally unique)
+Region: Select "East US"
+Pricing tier: Select "Standard"
+Click "Next: Access policy >"
+
+Configure Access Policy:
+Permission model: Keep "Vault access policy"
+Under "Access policies," click "+ Add Access Policy"
+Configure from template: Select "Secret Management"
+Principal: Click "None selected"
+Search for your username (the one you're logged in with)
+Click on your account
+Click "Select"
+Click "Add"
+Click "Review + create" → "Create"
+
+Step 10: Store VM Credentials in Key Vault
+
+Access Your Key Vault:
+After deployment, click "Go to resource"
+Click "Secrets" in the left menu
+Click "+ Generate/Import"
+
+Store Windows VM Password:
+Upload options: Keep "Manual"
+Name: Type DC01-AdminPassword
+Value: Type TechCorp123!@#
+Content type: Type password
+Click "Create"
+
+Store Linux VM SSH Key:
+Click "+ Generate/Import" again
+Name: Type WebServer01-SSHKey
+Value: Open the SSH private key file you downloaded and copy its contents
+Content type: Type ssh-private-key
+Click "Create"
+
+Step 11: Test Key Vault Access
+
+Retrieve a Secret:
+Click "Secrets" in the left menu
+Click "DC01-AdminPassword"
+Click the current version (the string of letters/numbers)
+Click "Show Secret Value"
+Verify it shows TechCorp123!@#
+
+Grant Access to John Smith:
+Click "Access policies" in the left menu
+Click "+ Add Access Policy"
+Configure from template: Select "Secret Management"
+Principal: Search for "john.smith"
+Select "John Smith"
+Click "Select"
+Click "Add"
+Click "Save" (important!)
+
+
+Azure Monitor Setup
+Step 12: Create Log Analytics Workspace
+
+Navigate to Log Analytics:
+Azure Portal → "All services" → Type "Log Analytics"
+Click "Log Analytics workspaces"
+Click "+ Create"
+
+Configure Workspace:
+Subscription: Select your subscription
+Resource group: Select "TechCorp-Prod-RG"
+Name: Type TechCorp-LogAnalytics
+Region: Select "East US"
+Click "Review + create" → "Create"
+
+Step 13: Connect VMs to Log Analytics
+
+Connect Windows VM:
+Go to Virtual Machines → Click "DC01"
+Click "Monitoring" in the left menu
+Click "Insights"
+Click "Enable"
+Log Analytics workspace: Select "TechCorp-LogAnalytics"
+Click "Enable"
+Wait for deployment (this takes 5-10 minutes)
+
+Connect Linux VM:
+Go to Virtual Machines → Click "WebServer01"
+Click "Monitoring" → "Insights"
+Click "Enable"
+Log Analytics workspace: Select "TechCorp-LogAnalytics"
+Click "Enable"
+Wait for deployment
+
+Step 14: Configure Performance Monitoring
+
+Access Log Analytics:
+Go to "Log Analytics workspaces" → Click "TechCorp-LogAnalytics"
+Click "Logs" in the left menu
+Close the "Queries" popup if it appears
+
+Run Your First Query:
+In the query window, type:
+kustoPerf
+| where TimeGenerated > ago(1h)
+| where CounterName == "% Processor Time"
+| summarize avg(CounterValue) by Computer
+Click "Run"
+You should see CPU usage data from your VMs
+
+Backup Configuration
+Step 15: Create Recovery Services Vault
+
+Navigate to Recovery Services:
+Azure Portal → "All services" → Type "Recovery Services"
+Click "Recovery Services vaults"
+Click "+ Create"
+
+Configure Vault:
+Subscription: Select your subscription
+Resource group: Select "TechCorp-Prod-RG"
+Vault name: Type TechCorp-Backup-Vault
+Region: Select "East US"
+Click "Review + create" → "Create"
+
+Step 16: Configure VM Backup
+
+Setup Backup for Windows VM:
+Go to Virtual Machines → Click "DC01"
+Click "Backup" in the left menu
+Recovery Services vault: Select "TechCorp-Backup-Vault"
+Backup policy: Click "Create new policy"
+Policy name: Type Daily-Backup-Policy
+Backup frequency: Keep "Daily"
+Time: Set to "2:00 AM"
+Timezone: Select your timezone
+Retention range: Keep "30 days"
+Click "OK"
+Click "Enable backup"
+
+Setup Backup for Linux VM:
+Go to Virtual Machines → Click "WebServer01"
+Click "Backup" in the left menu
+Recovery Services vault: Select "TechCorp-Backup-Vault"
+Backup policy: Select "Daily-Backup-Policy"
+Click "Enable backup"
+
+Step 17: Test Backup
+
+Run Manual Backup:
+Go to Virtual Machines → Click "DC01"
+Click "Backup" in the left menu
+Click "Backup now"
+Retain backup till: Select a date 30 days from now
+Click "OK"
+Note: This will take 30-60 minutes to complete
+
+Monitor Backup Job:
+Go to "Recovery Services vaults" → Click "TechCorp-Backup-Vault"
+Click "Backup jobs" in the left menu
+You should see the backup job "In progress"
+
+Security Monitoring & Alerts
+Step 18: Configure Security Alerts
+
+Navigate to Monitor:
+Azure Portal → "All services" → Type "Monitor"
+Click "Monitor"
+Click "Alerts" in the left menu
+Click "+ Create" → "Alert rule"
+Create High CPU Alert:
+Scope: Click "Select resource"
+Filter by "Virtual machines"
+Select "DC01"
+Click "Done"
+Condition: Click "Add condition"
+Search for "Percentage CPU"
+Click "Percentage CPU"
+Threshold value: Type 80
+Aggregation granularity: Select "5 minutes"
+Click "Done"
+Actions: Click "Add action groups" → "Create action group"
+Resource group: Select "TechCorp-Prod-RG"
+Action group name: Type IT-Alerts
+Display name: Type IT-Alerts
+Click "Next: Notifications >"
+Notification type: Select "Email/SMS message/Push/Voice"
+Name: Type Email-Admin
+Check "Email" and enter your email address
+Click "OK"
+Click "Review + create" → "Create"
+
+Alert rule details:
+Alert rule name: Type High-CPU-DC01
+Description: Type Alert when DC01 CPU exceeds 80%
+Click "Create alert rule"
+
+Step 19: Configure Storage Alerts
+
+Create Low Disk Space Alert:
+Click "+ Create" → "Alert rule"
+Scope: Select "DC01"
+Condition: Click "Add condition"
+Search for "Available Memory Bytes"
+Click "Available Memory Bytes"
+Threshold value: Type 500000000 (500MB)
+Operator: Select "Less than"
+Click "Done"
+Actions: Select "IT-Alerts" action group
+Alert rule name: Type Low-Memory-DC01
+Click "Create alert rule"
+
+Step 20: Test Alert System
+
+Generate Test Alert:
+RDP to your DC01 VM
+Open Task Manager
+Go to "Performance" tab
+Note current CPU usage
+Open multiple programs to increase CPU usage
+Or run this PowerShell command:
+while($true) { $result = 1; for($i = 0; $i -lt 10000000; $i++) { $result += $i } }
+Wait 10-15 minutes for alert to trigger
+Check your email for alert notification
+
+Dashboard Creation & Documentation
+Step 21: Create Comprehensive Dashboard
+
+Create New Dashboard:
+Azure Portal → Click "Dashboard" in the top menu
+Click "+ New dashboard"
+Dashboard name: Type TechCorp-Operations-Dashboard
+Click "Save"
+Add VM Status Tiles:
+Click "Edit" (pencil icon)
+From the tile gallery, drag "Virtual machines" to the dashboard
+Configure to show your VMs
+Click "Done customizing"
+
+Add Performance Metrics:
+Click "Edit" again
+Drag "Metrics" tile to dashboard
+Configure to show CPU performance from both VMs
+Add another "Metrics" tile for Memory usage
+Click "Done customizing"
+
+Add Backup Status:
+Click "Edit"
+Search for "Recovery Services vault"
+Drag the tile to dashboard
+Configure to show backup status
+Click "Done customizing"
+
 Project Completion Summary:
 ==================================
 ✅ Created 3 Resource Groups
@@ -313,11 +725,33 @@ Project Completion Summary:
 ✅ Deployed Windows Server 2019 VM (DC01)
 ✅ Deployed Ubuntu Linux VM (WebServer01)
 ✅ Tested connectivity to both VMs
+✅ Enterprise Security:
+Azure Active Directory with users and groups
+Multi-factor authentication
+Conditional access policies
+Centralized secret management
+✅ Comprehensive Monitoring:
+Log Analytics workspace
+Performance dashboards
+Custom alerts and notifications
+Automated backup policies
+✅ Professional Documentation:
+Complete GitHub repository
+Troubleshooting guides
+Architecture documentation
+Best practices implementation
+✅ Real-World Skills:
+Security configuration
+Monitoring setup
+Backup planning
+Alert management
 
-Key Learning Points:
-- Azure Portal navigation
-- Resource group organization
-- Virtual network planning
-- Security group configuration
-- VM deployment process
-- SSH vs RDP connections
+Your Infrastructure Now Includes:
+Resource Groups: 3
+Virtual Network: 1 with 3 subnets
+Virtual Machines: 2 (monitored and backed up)
+Key Vault: 1 with stored secrets
+Log Analytics: 1 workspace
+Backup Vault: 1 with daily policies
+Security Alerts: 2 configured rules
+Dashboard: 1 comprehensive operations dashboard
