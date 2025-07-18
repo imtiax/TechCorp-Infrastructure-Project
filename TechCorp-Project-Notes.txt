@@ -1,4 +1,4 @@
-Project 1: Company Infrastructure Setup - Ultra-Detailed Guide
+Project 1 - Part 1: Company Infrastructure Setup - Ultra-Detailed Guide
 Before We Start: Setting Up Your Environment
 
 Step 1: Create/Access Your Azure Account
@@ -21,10 +21,10 @@ In Azure Portal, click the "Cloud Shell" icon (>_) in the top toolbar
 Select "Bash" when prompted
 Click "Create storage" if it's your first time
 
-Day 1: Setting Up Resource Groups
+Setting Up Resource Groups
 Step 1: Create Your First Resource Group
-Via Azure Portal:
 
+Via Azure Portal:
 Login to Azure Portal (https://portal.azure.com)
 Navigate to Resource Groups:
 Click "All services" in the left sidebar
@@ -59,7 +59,7 @@ You should now see 3 resource groups in your list
 Each should show "East US" as the location
 Each should show "0 resources" currently
 
-Day 2: Planning Your Network
+Planning Your Network
 Step 3: Understanding the Network Design
 
 Our Network Plan:
@@ -79,7 +79,7 @@ Create New Virtual Network:
 Click "+ Create" button (top left)
 Subscription: Select your subscription
 Resource group: Click dropdown → Select "TechCorp-Network-RG"
-Name: Type TechCorp-VNet
+Name: Type "TechCorp-VNet"
 Region: Select "East US"
 
 Configure IP Addresses:
@@ -94,13 +94,13 @@ Add Additional Subnets:
 After deployment completes, click "Go to resource"
 In the left menu, click "Subnets"
 Click "+ Subnet" button
-Name: Type App-Subnet
+Name: Type "App-Subnet"
 Subnet address range: Type 10.0.2.0/24
 Click "Save"
 
 Add Database Subnet:
 Click "+ Subnet" button again
-Name: Type Database-Subnet
+Name: Type "Database-Subnet"
 Subnet address range: Type 10.0.3.0/24
 Click "Save"
 
@@ -108,7 +108,7 @@ Verification:
 You should see 3 subnets in your Virtual Network
 Each subnet should show "Available IPs: 251" (256 minus 5 reserved by Azure)
 
-Day 3: Setting Up Security
+Setting Up Security
 Step 5: Create Network Security Groups
 Create Web Security Group:
 Navigate to Network Security Groups:
@@ -119,7 +119,7 @@ Create Web NSG:
 Click "+ Create"
 Subscription: Select your subscription
 Resource group: Select "TechCorp-Network-RG"
-Name: Type Web-NSG
+Name: Type "Web-NSG"
 Region: Select "East US"
 Click "Review + create" → "Create"
 
@@ -153,17 +153,17 @@ Click "Add"
 Create App Security Group:
 Go back to Network Security Groups main page
 Click "+ Create"
-Name: Type App-NSG
+Name: Type "App-NSG"
 Resource group: Select "TechCorp-Network-RG"
 Click "Review + create" → "Create"
 
 Create Database Security Group:
 Repeat the process
-Name: Type Database-NSG
+Name: Type "Database-NSG"
 Resource group: Select "TechCorp-Network-RG"
 Click "Review + create" → "Create"
 
-Day 4: Associate Security Groups with Subnets
+Associate Security Groups with Subnets
 Step 6: Link NSGs to Subnets
 Navigate to Virtual Networks:
 Azure Portal → "All services" → "Virtual networks"
@@ -188,7 +188,7 @@ Click "Save"
 Verification:
 Each subnet should now show its associated NSG in the subnets list
 
-Day 5: Create Your First Virtual Machine (Windows Domain Controller)
+Create Your First Virtual Machine (Windows Domain Controller)
 Step 7: Create Windows VM
 Navigate to Virtual Machines:
 Azure Portal → "All services" → Type "Virtual machines"
@@ -199,7 +199,7 @@ Create VM:
 Click "+ Create" → Select "Azure virtual machine"
 Subscription: Select your subscription
 Resource group: Select "TechCorp-Prod-RG"
-Virtual machine name: Type DC01
+Virtual machine name: Type "DC01"
 Region: Select "East US"
 Availability options: Keep "No infrastructure redundancy required"
 Security type: Keep "Standard"
@@ -228,18 +228,15 @@ Review and Create:
 Click "Review + create"
 Wait for validation to pass
 Click "Create"
-Download private key: Click "Download private key and create resource"
-Save the key file to your computer
 Wait for Deployment: This usually takes 5-10 minutes.
 
-Day 6: Create Linux Web Server
+Create Linux Web Server
 Step 8: Create Linux VM
 
 Create Second VM:
-
 Go to Virtual Machines → Click "+ Create" → "Azure virtual machine"
 Resource group: Select "TechCorp-Prod-RG"
-Virtual machine name: Type WebServer01
+Virtual machine name: Type 'WebServer01'
 Region: Select "East US"
 Image: Click "See all images"
 Type "Ubuntu" in search box
@@ -278,7 +275,7 @@ Click "Review + create" → "Create"
 Download private key: Click "Download private key and create resource"
 Save the SSH key file
 
-Day 7: Test and Document Everything
+Test and Document Everything
 Step 9: Test Your Windows VM
 
 Connect to Windows VM:
