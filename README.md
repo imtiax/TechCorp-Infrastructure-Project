@@ -36,13 +36,50 @@ This project demonstrates the setup of a basic company infrastructure in Microso
 - **Linux VM:** SSH to WebServer01 public IP
 - **Credentials:** azureuser / TechCorp123!@# (Windows)
 
-## Cost Estimate
-- **Daily Cost:** Approximately $3-5 USD
-- **Monthly Cost:** Approximately $90-150 USD
-- **Note:** Stop VMs when not in use to save costs
+## Security & Monitoring Implementation
 
-## Next Steps
-1. Install Active Directory on DC01
-2. Configure web server on WebServer01
-3. Implement backup strategies
-4. Add monitoring and alerting
+## Overview
+Enhanced the basic infrastructure with enterprise-level security and monitoring capabilities.
+
+## Components Added
+
+### Azure Active Directory
+- **Security Groups Created:**
+  - IT-Department
+  - HR-Department
+  - Azure-Administrators
+
+- **Users Created:**
+  - john.smith (IT Administrator)
+  - jane.doe (HR Manager)
+
+- **Security Features:**
+  - Multi-factor authentication for administrators
+  - Conditional access policies
+  - Role-based access control
+
+### Azure Key Vault
+- **Vault Name:** techcorp-keyvault-001
+- **Stored Secrets:**
+  - DC01-AdminPassword
+  - WebServer01-SSHKey
+- **Access Policies:** Configured for admin users
+
+### Monitoring & Logging
+- **Log Analytics Workspace:** TechCorp-LogAnalytics
+- **Connected Resources:** Both VMs sending logs
+- **Performance Monitoring:** CPU, Memory, Disk metrics
+- **Custom Dashboards:** TechCorp-Operations-Dashboard
+
+### Backup Configuration
+- **Recovery Services Vault:** TechCorp-Backup-Vault
+- **Backup Policy:** Daily-Backup-Policy
+- **Protected Resources:** DC01, WebServer01
+- **Retention:** 30 days
+
+### Security Alerts
+- **Alert Rules:**
+  - High-CPU-DC01 (>80% CPU usage)
+  - Low-Memory-DC01 (<500MB available)
+- **Action Groups:** IT-Alerts (email notifications)
+- **Notification Email:** [your-email@domain.com]
