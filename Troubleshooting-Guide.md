@@ -42,7 +42,3 @@
 3. **Backup Failure:** Check vault status, retry manually
 4. **Security Alert:** Review logs, take appropriate action
 
-## Contact Information
-- **Primary Admin:** [Your Name]
-- **Email:** [your-email@domain.com]
-- **Phone:** [your-phone-number]
